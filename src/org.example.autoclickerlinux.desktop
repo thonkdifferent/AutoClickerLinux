@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+
+Name=AutoClickerLinux
+GenericName=A Simple KDE Application
+Icon=autoclickerlinux
+
+Exec=autoclickerlinux
+StartupWMClass=autoclickerlinux

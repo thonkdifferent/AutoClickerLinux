@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop-application">
+  <id>org.example.autoclickerlinux</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license> https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-metadata_license </project_license>
+  <name>AutoClickerLinux</name>
+  <summary> https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-summary </summary>
+  <description>
+    <p> https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-description </p>
+  </description>
+  <url type="homepage">https://www.example.org</url>
+  <url type="bugtracker">https://bugs.example.org</url>
+  <url type="donation">https://www.example.org/community/donations</url>
+  <screenshots>
+    <screenshot type="default">
+      <image> https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots </image>
+    </screenshot>
+  </screenshots>
+  <provides>
+    <binary>autoclickerlinux</binary>
+  </provides>
+  <launchable type="desktop-id">org.example.autoclickerlinux.desktop</launchable>
+  <project_group>KDE</project_group>
+</component>
