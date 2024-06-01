@@ -7,7 +7,7 @@
 #include "autoclickerlinuxwindow.h"
 
 AutoClickerLinuxWindow::AutoClickerLinuxWindow(std::unique_ptr<VirtualMouse> virtual_mouse) : xdg_shortcuts_portal(
-        "org.freedesktop.portal.Desktop", QLatin1String("/org/freedesktop/portal/desktop"),
+        QLatin1String("org.freedesktop.portal.Desktop"), QLatin1String("/org/freedesktop/portal/desktop"),
         QDBusConnection::sessionBus(), this),
     mousy(std::move(virtual_mouse))
 
