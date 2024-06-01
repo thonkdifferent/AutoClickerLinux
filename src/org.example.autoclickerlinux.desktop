@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 
-Name=AutoClickerLinux
-GenericName=A Simple KDE Application
+Name=AutoClicker for Linux
+GenericName=An automatic clicking utility
 Icon=autoclickerlinux
 
 Exec=autoclickerlinux
