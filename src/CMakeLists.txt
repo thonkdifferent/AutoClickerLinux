@@ -1,5 +1,5 @@
 qt_add_dbus_interface(XDG_SRCS portals/org.freedesktop.portal.GlobalShortcuts.xml xdg_global_shortcuts_iface)
-qt_add_dbus_adaptor(XDG_SRCS portals/org.freedesktop.portal.GlobalShortcuts.xml xdg_global_shortcuts_iface.h OrgFreedesktopPortalGlobalShortcutsInterface )
+
 
 add_executable(autoclickerlinux
         evdev/EvDevDevice.cpp
@@ -9,6 +9,8 @@ add_executable(autoclickerlinux
         VirtualMouse.cpp
         VirtualMouse.h
         ${XDG_SRCS}
+        portals/GlobalShortcutsController.cpp
+        portals/GlobalShortcutsController.h
 )
 
 target_include_directories(autoclickerlinux PRIVATE ${EVDEV_INCLUDE_DIR})

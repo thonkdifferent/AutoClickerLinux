@@ -5,10 +5,8 @@
 #ifndef EVDEVEXCEPTION_H
 #define EVDEVEXCEPTION_H
 #include <exception>
-#include <sstream>
-#include <iostream>
 #include <QMessageBox>
-
+#include <iostream>
 #define GUARD(statement,error_code) if(statement==error_code)\
 {\
 std::stringstream message;\
@@ -43,14 +41,6 @@ return;\
 }
 
 #define UNWRAP_NULL(variable,statement) UNWRAP(variable,statement,nullptr)
-struct EvDevException : public std::exception {
-
-    explicit EvDevException(std::string_view message): m_message(std::move(message)){}
-    [[nodiscard]] const char* what() const noexcept override;
-private:
-    std::string_view m_message;
-};
-
 
 
 #endif //EVDEVEXCEPTION_H
