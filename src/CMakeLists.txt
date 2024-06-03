@@ -1,5 +1,8 @@
 qt_add_dbus_interface(XDG_SRCS portals/org.freedesktop.portal.GlobalShortcuts.xml xdg_global_shortcuts_iface)
-qt_add_dbus_adaptor(XDG_SRCS portals/org.freedesktop.portal.GlobalShortcuts.xml xdg_global_shortcuts_adaptor.h)
+qt_add_dbus_interface(XDG_SRCS portals/org.freedesktop.portal.Request.xml xdg_portal_request_iface)
+
+qt_add_dbus_adaptor(XDG_SRCS portals/org.freedesktop.portal.GlobalShortcuts.xml xdg_global_shortcuts_iface.h OrgFreedesktopPortalGlobalShortcutsInterface XdpGlobalShortcuts)
+qt_add_dbus_adaptor(XDG_SRCS portals/org.freedesktop.portal.Request.xml xdg_portal_request_iface.h OrgFreedesktopPortalRequestInterface XdpRequest)
 
 add_executable(autoclickerlinux
         evdev/EvDevDevice.cpp
