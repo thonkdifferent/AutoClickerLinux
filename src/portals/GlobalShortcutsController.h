@@ -5,17 +5,17 @@
 #ifndef GLOBALSHORTCUTSCONTROLLER_H
 #define GLOBALSHORTCUTSCONTROLLER_H
 
-#include "XdpGlobalShortcuts.h"
+
+#include "xdg_global_shortcuts_iface.h"
 #include <QObject>
 #include <QStringList>
 #include <QRandomGenerator64>
 #include <QMessageBox>
 
 
-
 using Shortcut = QMap<QString,QVariantMap>;
 struct GlobalShortcutsController : QObject{
-Q_OBJECT
+
     explicit GlobalShortcutsController();
 
 public Q_SLOTS:
@@ -23,7 +23,7 @@ public Q_SLOTS:
 private:
     void report_portal_error(const char *message);
     void report_portal_error(QString title, QString message);
-    GlobalShortcutsAdaptor xdg_global_shortcuts_adaptor;
+    OrgFreedesktopPortalGlobalShortcutsInterface iface;
     QString handle_id;
 
 };
