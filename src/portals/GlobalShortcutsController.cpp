@@ -7,14 +7,14 @@ Q_DECLARE_METATYPE(Shortcut)
 Q_DECLARE_METATYPE(QList<Shortcut>)
 #define PORTAL_SIGNAL_CONNECT(interface,signalName,target,slot) {\
 const bool ret = QDBusConnection::sessionBus().connect(QString(),\
-        sessionReply.value().path(),\
+        QStringLiteral("/org/freedesktop/portal/desktop"),\
         interface,\
         signalName,\
         target,\
         slot\
         );\
 if(!ret)\
-    report_portal_error("Could not bind to signalName");\
+    report_portal_error(QStringLiteral("Could not bind to %1").arg(signalName));\
 }
 #define PORTAL(name) QLatin1String("org.freedesktop.portal.%1").arg(QStringLiteral(name))
 void GlobalShortcutsController::report_portal_error(QString title, QString message)
@@ -24,13 +24,13 @@ void GlobalShortcutsController::report_portal_error(QString title, QString messa
     exit(1);
     return;
 }
-void GlobalShortcutsController::report_portal_error(const char* message) {
-    report_portal_error(QStringLiteral("Could not connect to connect to portal"),QLatin1String(message));
+void GlobalShortcutsController::report_portal_error(QString message) {
+    report_portal_error(QStringLiteral("Could not connect to connect to portal"),message);
 }
 
-GlobalShortcutsController::GlobalShortcutsController() : iface(QLatin1String("org.freedesktop.portal.Desktop"), QLatin1String("/org/freedesktop/portal/desktop"),
-                                                               QDBusConnection::sessionBus(), this),
-                                                         handle_id(QStringLiteral("AutoClickerLinux-%1").arg(QRandomGenerator64::global()->generate()))
+GlobalShortcutsController::GlobalShortcutsController() : iface(new OrgFreedesktopPortalGlobalShortcutsInterface(
+        QLatin1String("org.freedesktop.portal.Desktop"), QLatin1String("/org/freedesktop/portal/desktop"), QDBusConnection::sessionBus(), this)),
+                                                         handle_id(QStringLiteral("AutoClickerLinux%1").arg(QRandomGenerator::global()->generate()))
 {
 
 
@@ -39,29 +39,28 @@ GlobalShortcutsController::GlobalShortcutsController() : iface(QLatin1String("or
                 {QLatin1String("handle_token"),handle_id}
     };
 
-    auto sessionReply = iface.CreateSession(sessionParameters);
+    auto sessionReply = iface->CreateSession(sessionParameters);
     sessionReply.waitForFinished();
     if(!sessionReply.isValid())
-        report_portal_error("Could not connect to the global shortcuts portal.");
+        report_portal_error(QStringLiteral("Could not connect to the global shortcuts portal."));
 
 
     const bool ret = QDBusConnection::sessionBus().connect(QString(),
-        sessionReply.value().path(),
-        QLatin1String("org.freedesktop.portal.Request"),
-        QLatin1String("Response"),
-        this,
-        SLOT(response(uint,QVariantMap))
-        );
-    if(!ret)
-        report_portal_error("Could not create a DBus session");
+                                                               sessionReply.value().path(),
+                                                               QLatin1String("org.freedesktop.portal.Request"),
+                                                               QLatin1String("Response"),
+                                                               this,
+                                                               SLOT(response(uint, QVariantMap)));
 
-
+    if(!ret) {
+        report_portal_error(QStringLiteral("Could not connect the response signal"));
+    }
     qDBusRegisterMetaType<Shortcut>();
     qDBusRegisterMetaType<QList<Shortcut>>();
 
-    PORTAL_SIGNAL_CONNECT(PORTAL("GlobalShortcuts"),QLatin1String("Activated"),this,SLOT(onShortcutActivated()))
-    PORTAL_SIGNAL_CONNECT(PORTAL("GlobalShortcuts"),QLatin1String("Deactivated"),this, SLOT(onShortcutDeactivated()))
-    PORTAL_SIGNAL_CONNECT(PORTAL("GlobalShortcuts"),QLatin1String("ShortcutsChanged"),this,SLOT(onShortcutsChanged()))
+    connect(iface, &OrgFreedesktopPortalGlobalShortcutsInterface::Activated,this,  &GlobalShortcutsController::onActivated);
+    connect(iface,  &OrgFreedesktopPortalGlobalShortcutsInterface::Deactivated, this, &GlobalShortcutsController::onDeactivated);
+    connect(iface, &OrgFreedesktopPortalGlobalShortcutsInterface::ShortcutsChanged, this, &GlobalShortcutsController::onShortcutsChanged);
 }
 
 void GlobalShortcutsController::response(uint code, const QVariantMap &results) {
@@ -76,9 +75,21 @@ void GlobalShortcutsController::response(uint code, const QVariantMap &results) 
         }
         report_portal_error(QStringLiteral("Something went wrong"),message.join(QStringLiteral(" ")));
     }
+    qDebug()<<"RESPONSE: "<<code<<" " <<results;
 
 
+}
 
+void GlobalShortcutsController::onActivated(const QDBusObjectPath &session_handle, const QString &shortcut_id,
+    qulonglong timestamp, const QVariantMap &options) {
+}
+
+void GlobalShortcutsController::onDeactivated(const QDBusObjectPath &session_handle, const QString &shortcut_id,
+    qulonglong timestamp, const QVariantMap &options) {
+}
+
+void GlobalShortcutsController::onShortcutsChanged(const QDBusObjectPath &session_handle,
+    const QList<QPair<QString, QVariantMap>> &shortcuts) {
 }
 #undef PORTAL_SIGNAL_CONNECT
 #undef PORTAL

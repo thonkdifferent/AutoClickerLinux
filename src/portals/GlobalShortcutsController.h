@@ -15,15 +15,19 @@
 
 using Shortcut = QMap<QString,QVariantMap>;
 struct GlobalShortcutsController : QObject{
-
+Q_OBJECT
+public:
     explicit GlobalShortcutsController();
 
 public Q_SLOTS:
    void response(uint code, const QVariantMap& results);
+    void onActivated(const QDBusObjectPath &session_handle, const QString &shortcut_id, qulonglong timestamp, const QVariantMap &options);
+    void onDeactivated(const QDBusObjectPath &session_handle, const QString &shortcut_id, qulonglong timestamp, const QVariantMap &options);
+    void onShortcutsChanged(const QDBusObjectPath &session_handle, const QList<QPair<QString,QVariantMap>> &shortcuts);
 private:
-    void report_portal_error(const char *message);
+    void report_portal_error(QString message);
     void report_portal_error(QString title, QString message);
-    OrgFreedesktopPortalGlobalShortcutsInterface iface;
+    OrgFreedesktopPortalGlobalShortcutsInterface *iface;
     QString handle_id;
 
 };

@@ -14,6 +14,7 @@
 
 #include "xdg_global_shortcuts_iface.h"
 #include "VirtualMouse.h"
+#include "portals/GlobalShortcutsController.h"
 
 /**
  * This class serves as the main window for AutoClickerLinux.  It handles the
@@ -45,7 +46,7 @@ private:
     // this is the name of the root widget inside our Ui file
     // you can rename it in designer and then change it here
     Ui::mainWidget m_ui;
-    org::freedesktop::portal::GlobalShortcuts xdg_shortcuts_portal;
+    GlobalShortcutsController controller_;
     QString m_handle;
     std::unique_ptr<VirtualMouse> mousy;
 };
